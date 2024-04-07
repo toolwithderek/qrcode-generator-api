@@ -122,15 +122,15 @@ async function generateQrCode(data = {}, isUpload = false) {
         },
     });
     const currentDate = new Date();
-    const outputFileName = `temp/qrcode_generated_${currentDate.getTime()}.${downloadOptions.extension || 'png'}`;
+    const outputFileName = `./temp/qrcode_generated_${currentDate.getTime()}.${downloadOptions.extension || 'png'}`;
     await qrCode.toFile(outputFileName, downloadOptions.extension || 'png');
-    clearTempFile(`./${outputFileName}`);
+    clearTempFile(outputFileName);
     if (isUpload) {
-        const uploadResult = await uploadImage(`./${outputFileName}`)
+        const uploadResult = await uploadImage(outputFileName)
         return uploadResult;
     } else {
         return {
-            url: `./${outputFileName}`
+            url: outputFileName
         };
     }
 }
