@@ -1,6 +1,7 @@
 const generateQrCode = require('./../qrcode-generator.js')
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
 
 const handleImageFileUpload = async (req, res) => {
     // Set up multer storage
@@ -98,6 +99,34 @@ exports.createQrCode = async (req, res) => {
         if (data.image) {
             data.image = getFilePath(data.image);
         }
+        const qrCode = await generateQrCode(data, false);
+        const responseData = {
+            downloadUrl: qrCode.url,
+            width: qrCode.width,
+            height: qrCode.height,
+            format: qrCode.format,
+            created_at: qrCode.created_at,
+            bytes: qrCode.bytes
+        }
+        if (responseData.downloadUrl) {
+            res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(responseData.downloadUrl));
+            res.setHeader('Content-Type', 'application/octet-stream');
+            const fileStream = fs.createReadStream(responseData.downloadUrl);
+            fileStream.pipe(res);
+        } else {
+            res.status(500).json({ error: 'Failed to generate QR code' });
+            return;
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error', message: error });
+    }
+}
+exports.createQrCodeV2 = async (req, res) => {
+    try {
+        const data = req.body;
+        if (data.image) {
+            data.image = getFilePath(data.image);
+        }
         const qrCode = await generateQrCode(data, true);
         const responseData = {
             downloadUrl: qrCode.url,
@@ -107,7 +136,12 @@ exports.createQrCode = async (req, res) => {
             created_at: qrCode.created_at,
             bytes: qrCode.bytes
         }
-        res.status(200).json(responseData);
+        if (responseData.downloadUrl) {
+            res.status(200).json(responseData);
+        } else {
+            res.status(500).json({ error: 'Failed to generate QR code' });
+            return;
+        }
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error', message: error });
     }
