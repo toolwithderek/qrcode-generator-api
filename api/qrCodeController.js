@@ -2,6 +2,7 @@ const generateQrCode = require('./../qrcode-generator.js')
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 
 const handleImageFileUpload = async (req, res) => {
     // Set up multer storage
@@ -60,14 +61,14 @@ const handleImageFileUpload = async (req, res) => {
 }
 
 
-function clearTempFile(filePath) {
+function clearTempFile(filePath, timeOut = 60000 * 5) {
     setTimeout(() => {
         fs.unlink(filePath, (err) => {
             if (err) {
                 console.error(err);
             }
         });
-    }, 60000 * 5);
+    }, timeOut);
 }
 
 const getFilePath = (filePath) => {
@@ -96,8 +97,13 @@ exports.uploadImage = async (req, res) => {
 exports.createQrCode = async (req, res) => {
     try {
         const data = req.body;
-        if (data.image) {
-            data.image = getFilePath(data.image);
+        let filePath = null;
+        if (!data.image.startsWith('temp://')) {
+            const response = await axios.get(data.image, { responseType: 'arraybuffer' });
+            const fileName = `image_${Date.now()}`;
+            filePath = `./temp/${fileName}`;
+            fs.writeFileSync(filePath, response.data);
+            data.image = filePath;
         }
         const qrCode = await generateQrCode(data, false);
         const responseData = {
@@ -108,6 +114,7 @@ exports.createQrCode = async (req, res) => {
             created_at: qrCode.created_at,
             bytes: qrCode.bytes
         }
+        clearTempFile(filePath, 0);
         if (responseData.downloadUrl) {
             res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(responseData.downloadUrl));
             res.setHeader('Content-Type', 'application/octet-stream');
