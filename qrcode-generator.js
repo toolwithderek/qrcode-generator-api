@@ -1,6 +1,7 @@
 const {QRCodeCanvas} = require('@loskir/styled-qr-code-node'); // or CommonJS
 const cloudinary = require('cloudinary').v2;
 const dotenv = require('dotenv');
+const fs = require('fs');
 
 const folderName = 'QrCode';
 dotenv.config()
