@@ -18,6 +18,7 @@ app.get('/api/healthcheck', (req, res) => {
   res.json({status: true});
 });
 
+app.post('/api/upload-image', qrCodeController.uploadImage)
 app.post('/api/qr-code', qrCodeController.createQrCode)
 
 // Start the server
