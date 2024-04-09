@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@loskir/styled-qr-code-node": "^1.5.1",
+    "@sentry/node": "^7.109.0",
+    "@sentry/profiling-node": "^7.109.0",
     "axios": "^1.6.8",
     "cloudinary": "^2.1.0",
     "cors": "^2.8.5",
