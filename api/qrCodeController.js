@@ -97,13 +97,14 @@ exports.uploadImage = async (req, res) => {
 exports.createQrCode = async (req, res) => {
     try {
         const data = req.body;
-        let filePath = null;
+        // let filePath = null;
         if (!data.image.startsWith('temp://')) {
             const response = await axios.get(data.image, { responseType: 'arraybuffer' });
-            const fileName = `image_${Date.now()}`;
-            filePath = `./temp/${fileName}`;
-            fs.writeFileSync(filePath, response.data);
-            data.image = filePath;
+            // const fileName = `image_${Date.now()}`;
+            // filePath = `./temp/${fileName}`;
+            // fs.writeFileSync(filePath, response.data);
+            const base64Image = Buffer.from(response.data, 'binary').toString('base64');
+            data.image = `data:${response.headers['content-type']};base64,${base64Image}`;
         }
         const qrCode = await generateQrCode(data, false);
         const responseData = {
@@ -114,7 +115,7 @@ exports.createQrCode = async (req, res) => {
             created_at: qrCode.created_at,
             bytes: qrCode.bytes
         }
-        clearTempFile(filePath, 0);
+        // clearTempFile(filePath, 0);
         if (responseData.downloadUrl) {
             res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(responseData.downloadUrl));
             res.setHeader('Content-Type', 'application/octet-stream');
