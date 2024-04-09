@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const multer = require('multer');
 const Sentry = require("@sentry/node");
-import { nodeProfilingIntegration } from "@sentry/profiling-node";
+const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
 const qrCodeController = require('./qrCodeController');
 
