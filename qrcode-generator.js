@@ -122,6 +122,9 @@ async function generateQrCode(data = {}, isUpload = false) {
         },
     });
     const currentDate = new Date();
+    if (!fs.existsSync(`./temp`)) {
+        fs.mkdirSync(`./temp`, { recursive: true });
+    }
     const outputFileName = `./temp/qrcode_generated_${currentDate.getTime()}.${downloadOptions.extension || 'png'}`;
     await qrCode.toFile(outputFileName, downloadOptions.extension || 'png');
     clearTempFile(outputFileName);
