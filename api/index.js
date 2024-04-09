@@ -8,6 +8,9 @@ const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
 const qrCodeController = require('./qrCodeController');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 dotenv.config()
 const app = express();
 
@@ -37,6 +40,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
 app.use(cors());
+
+var options = {
+  explorer: true
+};
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 app.get('/api/healthCheck', (req, res) => {
   res.json({status: true});
