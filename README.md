@@ -1,4 +1,52 @@
-#### JSON Body Structure
+<p align="center">
+    <a href="#"><img width="150" src="QRCode.png?raw=true"></a>
+</p>
+<h2 align="center">QR Code Generator API</h2>
+
+### Usage
+
+**1. Create QR Code with API**
+
+```bash
+curl --location 'localhost:3000/api/createQrCode' \
+--header 'Content-Type: application/json' \
+--data '{
+        "data": "https:smarttrick.org",
+        "width": 300,
+        "height": 300,
+        "image": "https://rapidapi-prod-apis.s3.amazonaws.com/a9151bc9-7822-4401-83d5-204f100056d3.jpg",
+        "dotsOptions": {
+            "color": "#5ab342",
+            "type": "square"
+        },
+        "cornersSquareOptions": {
+            "color": "#57a805",
+            "type": "square"
+        },
+        "cornersDotOptions": {
+            "color": "#14761a",
+            "type": "square"
+        },
+        "backgroundOptions": {
+            "color": "#ffffff"
+        },
+        "imageOptions": {
+            "hideBackgroundDots": false,
+            "imageSize": 0.4,
+            "margin": 0
+        },
+        "downloadOptions": {
+            "name": "qrcode_generated.png",
+            "extension": "png"
+        }
+    }'
+```
+
+**2. Download QR Code**
+
+![DemoImage](./Demo.png)
+
+### JSON Body Structure
 Property               |Type                     |Default Value|Description
 -----------------------|-------------------------|-------------|-----------------------------------------------------
 width                  |number                   |`300`        |Size of canvas
@@ -53,37 +101,5 @@ Param    |Type                                |Default Value|Description
 ---------|------------------------------------|-------------|------------
 extension|string (`'png' 'jpeg' 'webp' 'svg'`)|`'png'`      |Blob type
 
-### Example
-
-```json
-{
-    "data": "https:smarttrick.org",
-    "width": 300,
-    "height": 300,
-    "image": "https://rapidapi-prod-apis.s3.amazonaws.com/a9151bc9-7822-4401-83d5-204f100056d3.jpg",
-    "dotsOptions": {
-        "color": "#5ab342",
-        "type": "square"
-    },
-    "cornersSquareOptions": {
-        "color": "#57a805",
-        "type": "square"
-    },
-    "cornersDotOptions": {
-        "color": "#14761a",
-        "type": "square"
-    },
-    "backgroundOptions": {
-        "color": "#ffffff"
-    },
-    "imageOptions": {
-        "hideBackgroundDots": false,
-        "imageSize": 0.4,
-        "margin": 0
-    },
-    "downloadOptions": {
-        "name": "qrcode_generated.png",
-        "extension": "png"
-    }
-}
-```
+### Live Demo
+[https://qrcodeapi.smarttrick.org/api-docs](https://qrcodeapi.smarttrick.org/api-docs)
