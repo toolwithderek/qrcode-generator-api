@@ -26,7 +26,6 @@ app.get('/api/healthCheck', (req, res) => {
 
 app.post('/api/uploadImage', qrCodeController.uploadImage)
 app.post('/api/createQrCode', qrCodeController.createQrCode)
-// app.post('/api/createQrCodeV2', qrCodeController.createQrCodeV2)
 
 // Optional fallthrough error handler
 app.use(function onError(err, req, res, next) {

@@ -70,14 +70,6 @@ function clearTempFile(filePath, timeOut = 60000 * 5) {
     }, timeOut);
 }
 
-const getFilePath = (filePath) => {
-    if (!filePath.startsWith('temp://')) {
-        return filePath;
-    }
-    const correctFilePath = filePath.replace('temp://', 'temp/');
-    return `./${correctFilePath}`
-}
-
 exports.uploadImage = async (req, res) => {
     try {
         const uploadedFilePath = await handleImageFileUpload(req, res);
@@ -122,28 +114,3 @@ exports.createQrCode = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', message: error });
     }
 }
-// exports.createQrCodeV2 = async (req, res) => {
-//     try {
-//         const data = req.body;
-//         if (data.image) {
-//             data.image = getFilePath(data.image);
-//         }
-//         const qrCode = await generateQrCode(data, true);
-//         const responseData = {
-//             downloadUrl: qrCode.url,
-//             width: qrCode.width,
-//             height: qrCode.height,
-//             format: qrCode.format,
-//             created_at: qrCode.created_at,
-//             bytes: qrCode.bytes
-//         }
-//         if (responseData.downloadUrl) {
-//             res.status(200).json(responseData);
-//         } else {
-//             res.status(500).json({ error: 'Failed to generate QR code' });
-//             return;
-//         }
-//     } catch (error) {
-//         res.status(500).json({ error: 'Internal Server Error', message: error });
-//     }
-// }
