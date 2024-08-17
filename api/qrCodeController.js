@@ -5,7 +5,6 @@ const path = require('path');
 const axios = require('axios');
 
 const handleImageFileUpload = async (req, res) => {
-    // Set up multer storage
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -76,7 +75,6 @@ const getFilePath = (filePath) => {
         return filePath;
     }
     const correctFilePath = filePath.replace('temp://', 'temp/');
-    // const file = fs.readFileSync(`./${correctFilePath}`);
     return `./${correctFilePath}`
 }
 
@@ -97,12 +95,8 @@ exports.uploadImage = async (req, res) => {
 exports.createQrCode = async (req, res) => {
     try {
         const data = req.body;
-        // let filePath = null;
         if (!data.image.startsWith('temp://')) {
             const response = await axios.get(data.image, { responseType: 'arraybuffer' });
-            // const fileName = `image_${Date.now()}`;
-            // filePath = `./temp/${fileName}`;
-            // fs.writeFileSync(filePath, response.data);
             const base64Image = Buffer.from(response.data, 'binary').toString('base64');
             data.image = `data:${response.headers['content-type']};base64,${base64Image}`;
         }
@@ -115,7 +109,6 @@ exports.createQrCode = async (req, res) => {
             created_at: qrCode.created_at,
             bytes: qrCode.bytes
         }
-        // clearTempFile(filePath, 0);
         if (responseData.downloadUrl) {
             res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(responseData.downloadUrl));
             res.setHeader('Content-Type', 'application/octet-stream');
@@ -129,28 +122,28 @@ exports.createQrCode = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', message: error });
     }
 }
-exports.createQrCodeV2 = async (req, res) => {
-    try {
-        const data = req.body;
-        if (data.image) {
-            data.image = getFilePath(data.image);
-        }
-        const qrCode = await generateQrCode(data, true);
-        const responseData = {
-            downloadUrl: qrCode.url,
-            width: qrCode.width,
-            height: qrCode.height,
-            format: qrCode.format,
-            created_at: qrCode.created_at,
-            bytes: qrCode.bytes
-        }
-        if (responseData.downloadUrl) {
-            res.status(200).json(responseData);
-        } else {
-            res.status(500).json({ error: 'Failed to generate QR code' });
-            return;
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error', message: error });
-    }
-}
+// exports.createQrCodeV2 = async (req, res) => {
+//     try {
+//         const data = req.body;
+//         if (data.image) {
+//             data.image = getFilePath(data.image);
+//         }
+//         const qrCode = await generateQrCode(data, true);
+//         const responseData = {
+//             downloadUrl: qrCode.url,
+//             width: qrCode.width,
+//             height: qrCode.height,
+//             format: qrCode.format,
+//             created_at: qrCode.created_at,
+//             bytes: qrCode.bytes
+//         }
+//         if (responseData.downloadUrl) {
+//             res.status(200).json(responseData);
+//         } else {
+//             res.status(500).json({ error: 'Failed to generate QR code' });
+//             return;
+//         }
+//     } catch (error) {
+//         res.status(500).json({ error: 'Internal Server Error', message: error });
+//     }
+// }
