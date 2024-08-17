@@ -102,4 +102,5 @@ Param    |Type                                |Default Value|Description
 extension|string (`'png' 'jpeg' 'webp' 'svg'`)|`'png'`      |Blob type
 
 ### Live Demo
-[https://qrcodeapi.smarttrick.org/api-docs](https://qrcodeapi.smarttrick.org/api-docs)
+- API Docs: [https://qrcodeapi.smarttrick.org/api-docs](https://qrcodeapi.smarttrick.org/api-docs)
+- [Custom your QR Code online](https://app.smarttrick.org/qr-code)
